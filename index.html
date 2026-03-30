@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BGED – Faculté de Droit USTA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0a1628;
+  --deep-blue: #1a2f5e;
+  --gold: #c9a227;
+  --gold-light: #e8c96b;
+  --crimson: #7c1a2a;
+  --cream: #f8f5ee;
+  --cream-dark: #ede8da;
+  --white: #ffffff;
+  --text-dark: #1a1a2e;
+  --text-mid: #3d3d5c;
+  --text-light: #6b6b8a;
+  --border: rgba(201,162,39,0.3);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Lato',sans-serif;background:var(--cream);color:var(--text-dark);overflow-x:hidden;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;}
+.nav-brand{display:flex;align-items:center;gap:12px;}
+.nav-logos{display:flex;gap:8px;align-items:center;}
+.nav-logo{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--gold);object-fit:cover;}
+.nav-title{font-family:'Cinzel',serif;color:var(--gold);font-size:13px;font-weight:600;letter-spacing:0.08em;line-height:1.2;}
+.nav-title span{display:block;color:rgba(255,255,255,0.45);font-size:9px;font-weight:400;font-family:'Lato',sans-serif;letter-spacing:0.15em;text-transform:uppercase;}
+.nav-links{display:flex;list-style:none;}
+.nav-links a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0 12px;height:64px;display:flex;align-items:center;border-bottom:2px solid transparent;transition:all .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);border-bottom-color:var(--gold);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;}
+.hamburger span{width:22px;height:2px;background:var(--gold);display:block;}
+
+/* PAGES */
+.page{display:none;min-height:100vh;padding-top:64px;}
+.page.active{display:block;}
+
+/* HERO */
+#page-accueil{background:var(--navy);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.hero-bg-svg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0.055;pointer-events:none;}
+.hero-bg-svg svg{width:75vw;max-width:850px;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,162,39,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,162,39,0.04) 1px,transparent 1px);background-size:60px 60px;}
+.hero-glow{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(28,58,138,0.35) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);}
+.hero-content{position:relative;z-index:2;text-align:center;padding:2rem;animation:fadeUp 1s ease-out;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+.hero-logos-row{display:flex;gap:36px;justify-content:center;align-items:center;margin-bottom:2.5rem;}
+.hero-logo-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.hero-logo-img{width:88px;height:88px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;box-shadow:0 0 28px rgba(201,162,39,0.35);}
+.hero-logo-lbl{font-size:9px;letter-spacing:0.2em;color:rgba(201,162,39,0.55);text-transform:uppercase;font-weight:700;}
+.hero-divider-v{width:1px;height:72px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);}
+.hero-overline{font-size:10px;font-weight:700;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;}
+.hero-h1{font-family:'Cinzel',serif;font-size:clamp(1.8rem,5vw,3.5rem);font-weight:700;color:#fff;line-height:1.1;margin-bottom:.5rem;}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(1.1rem,3vw,1.8rem);font-style:italic;color:var(--gold-light);margin-bottom:1.5rem;font-weight:300;}
+.hero-motto{font-family:'Cormorant Garamond',serif;font-size:1rem;color:rgba(255,255,255,.4);letter-spacing:.2em;margin-bottom:2.5rem;font-style:italic;}
+.hero-year-badge{display:inline-block;border:1px solid var(--gold);color:var(--gold);font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:.15em;padding:6px 20px;margin-bottom:2rem;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-gold{font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--navy);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:13px 28px;cursor:pointer;text-decoration:none;transition:all .3s;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);display:inline-block;}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,162,39,.4);}
+.btn-outline{font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);background:transparent;border:1px solid var(--gold);padding:13px 28px;cursor:pointer;text-decoration:none;transition:all .3s;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);display:inline-block;}
+.btn-outline:hover{background:rgba(201,162,39,.1);transform:translateY(-2px);}
+.hero-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:rgba(255,255,255,.25);font-size:9px;letter-spacing:.2em;text-transform:uppercase;}
+.hero-scroll::after{content:'';width:1px;height:36px;background:linear-gradient(to bottom,rgba(201,162,39,.5),transparent);}
+
+/* STATS STRIP */
+.stats-strip{background:var(--gold);padding:20px 0;}
+.stats-inner{max-width:1100px;margin:0 auto;padding:0 2rem;display:grid;grid-template-columns:repeat(4,1fr);}
+.stat{text-align:center;padding:8px;border-right:1px solid rgba(10,22,40,.15);}
+.stat:last-child{border-right:none;}
+.stat-n{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;color:var(--navy);display:block;line-height:1;}
+.stat-l{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(10,22,40,.6);}
+
+/* PAGE INNER */
+.page-inner{max-width:1100px;margin:0 auto;padding:60px 2rem;}
+.page-header{margin-bottom:48px;text-align:center;}
+.page-overline{font-size:10px;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:10px;}
+.page-title{font-family:'Cinzel',serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;color:var(--navy);line-height:1.2;margin-bottom:14px;}
+.page-title.white{color:#fff;}
+.ornament{display:flex;align-items:center;gap:10px;justify-content:center;margin:14px 0;}
+.ornament::before,.ornament::after{content:'';height:1px;width:50px;background:linear-gradient(to right,transparent,var(--gold));}
+.ornament::after{background:linear-gradient(to left,transparent,var(--gold));}
+.ornament span{color:var(--gold);font-size:14px;}
+.page-desc{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--text-light);max-width:580px;margin:0 auto;line-height:1.8;font-style:italic;}
+
+/* BUREAU PAGE */
+#page-bureau{background:var(--white);}
+.year-badge-current{display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:var(--gold);font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:.15em;padding:8px 20px;margin-bottom:36px;}
+.members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:24px;}
+.mc{background:var(--cream);border:1px solid rgba(201,162,39,.15);position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;cursor:pointer;}
+.mc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--crimson));}
+.mc:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(10,22,40,.12);}
+.mc-photo{aspect-ratio:1;background:linear-gradient(135deg,var(--deep-blue),var(--navy));display:flex;align-items:center;justify-content:center;position:relative;}
+.mc-photo img{width:100%;height:100%;object-fit:cover;}
+.mc-avatar{width:72px;height:72px;border-radius:50%;border:2px solid var(--gold);background:rgba(201,162,39,.1);display:flex;align-items:center;justify-content:center;}
+.mc-avatar svg{width:36px;height:36px;fill:var(--gold);opacity:.5;}
+.mc-info{padding:18px;border-top:1px solid rgba(201,162,39,.1);}
+.mc-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--navy);margin-bottom:4px;}
+.mc-post{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.mc-badge{display:inline-block;background:var(--navy);color:rgba(255,255,255,.55);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;}
+
+/* ACTIVITES */
+#page-activites{background:var(--navy);}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.gi{position:relative;overflow:hidden;background:var(--deep-blue);cursor:pointer;min-height:180px;}
+.gi:first-child{grid-column:span 2;grid-row:span 2;}
+.gi img{width:100%;height:100%;object-fit:cover;transition:transform .5s;}
+.gi:hover img{transform:scale(1.05);}
+.gi-ph{background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.01));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;height:100%;color:rgba(201,162,39,.35);font-size:10px;letter-spacing:.1em;text-transform:uppercase;min-height:180px;}
+.gi-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,22,40,.8) 0%,transparent 60%);opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:14px;}
+.gi:hover .gi-overlay{opacity:1;}
+.gi-label{font-family:'Cormorant Garamond',serif;color:#fff;font-size:.95rem;font-style:italic;}
+
+/* COURS */
+#page-cours{background:var(--cream);}
+.level-nav{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:36px;}
+.lvl-btn{font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--text-mid);background:var(--cream-dark);border:1px solid var(--border);padding:8px 18px;cursor:pointer;transition:all .2s;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+.lvl-btn.active,.lvl-btn:hover{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+.lvl-soon{opacity:.5;position:relative;}
+.lvl-soon::after{content:'bientôt';position:absolute;top:-8px;right:-4px;background:var(--crimson);color:#fff;font-size:7px;font-weight:700;letter-spacing:.05em;padding:2px 5px;border-radius:2px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;}
+.cc{background:var(--white);border:1px solid rgba(201,162,39,.12);padding:22px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+.cc::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--gold),var(--crimson));transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.cc:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(10,22,40,.09);}
+.cc:hover::after{transform:scaleX(1);}
+.cc-lvl{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--crimson);background:rgba(124,26,42,.08);padding:3px 9px;display:inline-block;margin-bottom:10px;}
+.cc-name{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--navy);margin-bottom:7px;line-height:1.3;}
+.cc-info{font-size:11px;color:var(--text-light);}
+.cc-dl{display:flex;align-items:center;gap:6px;margin-top:14px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);cursor:pointer;text-decoration:none;transition:gap .2s;}
+.cc-dl:hover{gap:10px;}
+
+/* DOCUMENTS */
+#page-documents{background:var(--white);}
+.doc-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:36px;justify-content:center;}
+.df-btn{font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:7px 16px;border:1px solid var(--border);background:var(--cream);color:var(--text-mid);cursor:pointer;transition:all .2s;}
+.df-btn.active,.df-btn:hover{background:var(--navy);color:var(--gold);border-color:var(--navy);}
+.docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;}
+.dc{background:var(--cream);border:1px solid rgba(201,162,39,.12);padding:18px;display:flex;align-items:flex-start;gap:12px;transition:all .2s;cursor:pointer;}
+.dc:hover{border-color:var(--gold);box-shadow:0 4px 14px rgba(201,162,39,.1);}
+.dc-icon{width:38px;height:46px;background:linear-gradient(135deg,var(--crimson),#5a1020);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;font-weight:700;color:#fff;clip-path:polygon(0 0,80% 0,100% 14%,100% 100%,0 100%);}
+.dc-type{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3px;}
+.dc-name{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:600;color:var(--navy);line-height:1.3;margin-bottom:3px;}
+.dc-meta{font-size:10px;color:var(--text-light);}
+
+/* METHODO */
+#page-methodo{background:var(--cream);}
+.mt-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:40px;overflow-x:auto;gap:0;}
+.mt-tab{font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-light);background:none;border:none;border-bottom:2px solid transparent;padding:12px 20px;cursor:pointer;white-space:nowrap;transition:all .2s;margin-bottom:-1px;}
+.mt-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.mt-tab:hover:not(.active){color:var(--navy);}
+.mt-body{display:none;}
+.mt-body.active{display:grid;grid-template-columns:1fr 1fr;gap:36px;animation:fadeUp .3s ease;}
+.mt-text h3{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--navy);margin-bottom:14px;padding-left:14px;border-left:3px solid var(--gold);}
+.mt-text p{font-family:'Cormorant Garamond',serif;font-size:1.05rem;line-height:1.9;color:var(--text-mid);margin-bottom:14px;}
+.mt-steps{list-style:none;counter-reset:s;}
+.mt-steps li{counter-increment:s;display:flex;gap:14px;margin-bottom:18px;align-items:flex-start;}
+.mt-steps li::before{content:counter(s,upper-roman);font-family:'Cinzel',serif;font-size:10px;font-weight:600;color:var(--white);background:var(--gold);width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.mt-steps li strong{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--navy);display:block;margin-bottom:3px;}
+.mt-steps li span{font-size:.88rem;color:var(--text-light);line-height:1.6;}
+.mt-card{background:linear-gradient(135deg,var(--navy),var(--deep-blue));padding:28px;border-left:3px solid var(--gold);}
+.mt-card p{font-family:'Cormorant Garamond',serif;font-size:1rem;color:rgba(255,255,255,.7);line-height:1.9;font-style:italic;}
+.mt-quote{font-family:'Cormorant Garamond',serif;font-size:2.5rem;color:var(--gold);line-height:1;margin-bottom:6px;opacity:.4;}
+
+/* ANTERIEURS */
+#page-anterieurs{background:var(--navy);}
+.yr-tabs{display:flex;justify-content:center;flex-wrap:wrap;gap:0;margin-bottom:40px;border:1px solid var(--border);display:inline-flex;position:relative;left:50%;transform:translateX(-50%);}
+.yr-tab{font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:.08em;color:rgba(255,255,255,.5);background:none;border:none;padding:10px 22px;cursor:pointer;transition:all .2s;border-right:1px solid var(--border);}
+.yr-tab:last-child{border-right:none;}
+.yr-tab.active{background:var(--gold);color:var(--navy);}
+.yr-tab:hover:not(.active){color:var(--gold);}
+.mc-dark{background:rgba(255,255,255,.04);border:1px solid rgba(201,162,39,.15);}
+.mc-dark .mc-name{color:#fff;}
+
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(10,22,40,.92);z-index:2000;display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity .3s;}
+.modal-ov.open{opacity:1;pointer-events:all;}
+.modal{background:var(--white);max-width:520px;width:100%;position:relative;transform:translateY(20px);transition:transform .3s;}
+.modal-ov.open .modal{transform:translateY(0);}
+.modal-x{position:absolute;top:14px;right:14px;background:var(--navy);color:var(--gold);border:none;width:30px;height:30px;cursor:pointer;font-size:14px;}
+.modal-head{background:linear-gradient(135deg,var(--navy),var(--deep-blue));padding:28px;border-bottom:3px solid var(--gold);}
+.modal-head h2{font-family:'Cinzel',serif;font-size:1.3rem;color:#fff;margin-bottom:4px;}
+.modal-head p{color:var(--gold);font-size:10px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;}
+.modal-bd{padding:28px;}
+.modal-bd p{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--text-mid);line-height:1.9;}
+
+/* FOOTER */
+footer{background:var(--navy);border-top:1px solid var(--border);padding:36px 0 20px;}
+.foot-inner{max-width:1100px;margin:0 auto;padding:0 2rem;}
+.foot-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:16px;}
+.foot-brand{display:flex;align-items:center;gap:12px;}
+.foot-logos{display:flex;gap:8px;}
+.foot-logo{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);object-fit:cover;}
+.foot-name{font-family:'Cinzel',serif;color:var(--gold);font-size:12px;font-weight:600;}
+.foot-name span{display:block;color:rgba(255,255,255,.35);font-size:9px;font-family:'Lato',sans-serif;letter-spacing:.12em;text-transform:uppercase;}
+.foot-links{display:flex;gap:20px;flex-wrap:wrap;}
+.foot-links a{color:rgba(255,255,255,.4);text-decoration:none;font-size:11px;transition:color .2s;}
+.foot-links a:hover{color:var(--gold);}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.foot-copy{font-size:10px;color:rgba(255,255,255,.2);}
+.foot-motto{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:rgba(201,162,39,.45);}
+
+@media(max-width:900px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .nav-links.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--navy);padding:16px 0;border-bottom:1px solid var(--border);}
+  .nav-links.open a{height:44px;padding:0 2rem;}
+  .mt-body.active{grid-template-columns:1fr;}
+  .gallery-grid{grid-template-columns:1fr 1fr;}
+  .gi:first-child{grid-column:span 1;grid-row:span 1;}
+  .stats-inner{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:600px){
+  .hero-logos-row{flex-direction:column;gap:16px;}
+  .hero-divider-v{width:50px;height:1px;}
+  .stats-inner{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logos">
+      <img src="logo-usta.jpeg" alt="USTA" class="nav-logo">
+      <img src="logo-bged.jpeg" alt="BGED" class="nav-logo">
+    </div>
+    <div class="nav-title">BGED – USTA <span>Faculté de Droit · 2025–2026</span></div>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#" onclick="goPage('accueil')" data-page="accueil">Accueil</a></li>
+    <li><a href="#" onclick="goPage('bureau')" data-page="bureau">Bureau</a></li>
+    <li><a href="#" onclick="goPage('activites')" data-page="activites">Activités</a></li>
+    <li><a href="#" onclick="goPage('cours')" data-page="cours">Cours</a></li>
+    <li><a href="#" onclick="goPage('documents')" data-page="documents">Documents</a></li>
+    <li><a href="#" onclick="goPage('methodo')" data-page="methodo">Méthodologie</a></li>
+    <li><a href="#" onclick="goPage('anterieurs')" data-page="anterieurs">Bureaux Passés</a></li>
+  </ul>
+</nav>
+
+<!-- ===== PAGE ACCUEIL ===== -->
+<div id="page-accueil" class="page active">
+  <div class="hero-bg-svg">
+    <svg viewBox="0 0 800 700" xmlns="http://www.w3.org/2000/svg" fill="white">
+      <rect x="360" y="610" width="80" height="28" rx="3"/>
+      <rect x="328" y="636" width="144" height="14" rx="3"/>
+      <rect x="395" y="195" width="10" height="430"/>
+      <rect x="198" y="192" width="404" height="9" rx="4"/>
+      <circle cx="400" cy="188" r="16"/>
+      <line x1="238" y1="200" x2="195" y2="335" stroke="white" stroke-width="5" stroke-linecap="round"/>
+      <line x1="195" y1="335" x2="148" y2="335" stroke="white" stroke-width="5" stroke-linecap="round"/>
+      <line x1="148" y1="335" x2="238" y2="200" stroke="white" stroke-width="5" stroke-linecap="round"/>
+      <ellipse cx="193" cy="352" rx="78" ry="16"/>
+      <line x1="562" y1="200" x2="605" y2="362" stroke="white" stroke-width="5" stroke-linecap="round"/>
+      <line x1="605" y1="362" x2="652" y2="362" stroke="white" stroke-width="5" stroke-linecap="round"/>
+      <line x1="652" y1="362" x2="562" y2="200" stroke="white" stroke-width="5" stroke-linecap="round"/>
+      <ellipse cx="607" cy="380" rx="78" ry="16"/>
+      <rect x="396" y="88" width="8" height="108"/>
+      <polygon points="400,38 389,96 411,96"/>
+      <rect x="374" y="96" width="52" height="7" rx="2"/>
+    </svg>
+  </div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+        <div class="hero-logos-row">
+      <div class="hero-logo-wrap">
+        <img src="logo-usta.jpeg" alt="USTA" class="hero-logo-img">
+        <span class="hero-logo-lbl">Université USTA</span>
+      </div>
+      <div class="hero-divider-v"></div>
+      <div class="hero-logo-wrap">
+        <img src="logo-bged.jpeg" alt="Faculté de Droit" class="hero-logo-img">
+        <span class="hero-logo-lbl">Faculté de Droit</span>
+      </div>
+    </div>
+    <div class="hero-year-badge">✦ Année Universitaire 2025–2026 ✦</div>
+    <p class="hero-overline">Université Saint Thomas d'Aquin — Burkina Faso</p>
+    <h1 class="hero-h1">Bureau Général des<br>Étudiants en Droit</h1>
+    <p class="hero-sub">Faculté de Droit – USTA</p>
+    <p class="hero-motto">Veritas · Fides · Scientia</p>
+    <div class="cta-row">
+      <a href="#" class="btn-gold" onclick="goPage('bureau')">⚖ Notre Bureau 2025–2026</a>
+      <a href="#" class="btn-outline" onclick="goPage('cours')">📚 Cours & Ressources</a>
+    </div>
+  </div>
+  <div class="hero-scroll">Explorer</div>
+
+  <!-- Stats -->
+  <div style="position:absolute;bottom:0;left:0;right:0;" class="stats-strip">
+    <div class="stats-inner">
+      <div class="stat"><span class="stat-n">5</span><span class="stat-l">Niveaux</span></div>
+      <div class="stat"><span class="stat-n">8</span><span class="stat-l">Membres Bureau</span></div>
+      <div class="stat"><span class="stat-n">L1→M2</span><span class="stat-l">Filières</span></div>
+      <div class="stat"><span class="stat-n">2025</span><span class="stat-l">Promotion</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE BUREAU ===== -->
+<div id="page-bureau" class="page">
+  <div class="page-inner">
+    <div class="page-header">
+      <span class="page-overline">Année 2025–2026</span>
+      <h2 class="page-title">Notre Bureau Actuel</h2>
+      <div class="ornament"><span>⚖</span></div>
+      <p class="page-desc">Les membres élus qui œuvrent chaque jour pour la réussite des juristes de l'USTA.</p>
+      <div class="year-badge-current" style="margin-top:20px;">✦ 2025 – 2026</div>
+    </div>
+    <div class="members-grid" id="members-grid"></div>
+  </div>
+</div>
+
+<!-- ===== PAGE ACTIVITES ===== -->
+<div id="page-activites" class="page">
+  <div class="page-inner">
+    <div class="page-header">
+      <span class="page-overline" style="color:var(--gold);">Vie du Bureau</span>
+      <h2 class="page-title white">Photos des Activités</h2>
+      <div class="ornament"><span>📸</span></div>
+      <p class="page-desc" style="color:rgba(255,255,255,.45);">Moments forts de nos événements, conférences et activités académiques.</p>
+    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </div>
+</div>
+
+<!-- ===== PAGE COURS ===== -->
+<div id="page-cours" class="page">
+  <div class="page-inner">
+    <div class="page-header">
+      <span class="page-overline">Ressources Académiques</span>
+      <h2 class="page-title">Cours Disponibles</h2>
+      <div class="ornament"><span>📖</span></div>
+      <p class="page-desc">Fichiers chargés en direct depuis Google Drive · L1 &amp; L2 disponibles.</p>
+    </div>
+    <div class="level-nav">
+      <button class="lvl-btn active" onclick="selectNiveau('tous',this)">Tous</button>
+      <button class="lvl-btn" onclick="selectNiveau('L1',this)">Licence 1</button>
+      <button class="lvl-btn" onclick="selectNiveau('L2',this)">Licence 2</button>
+      <button class="lvl-btn lvl-soon" onclick="selectNiveau('L3',this)">Licence 3</button>
+      <button class="lvl-btn lvl-soon" onclick="selectNiveau('M1',this)">Master 1</button>
+      <button class="lvl-btn lvl-soon" onclick="selectNiveau('M2',this)">Master 2</button>
+    </div>
+    <div id="cours-status" style="text-align:center;padding:16px;font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--text-light);font-style:italic;display:none;"></div>
+    <div id="cours-loading" style="text-align:center;padding:48px;display:none;">
+      <div style="display:inline-block;width:36px;height:36px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;"></div>
+      <p style="margin-top:12px;font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--text-light);font-style:italic;">Chargement depuis Google Drive…</p>
+    </div>
+    <div class="courses-grid" id="courses-grid"></div>
+  </div>
+</div>
+
+<!-- ===== PAGE DOCUMENTS ===== -->
+<div id="page-documents" class="page">
+  <div class="page-inner">
+    <div class="page-header">
+      <span class="page-overline">Bibliothèque Juridique</span>
+      <h2 class="page-title">Documents & Codes</h2>
+      <div class="ornament"><span>📋</span></div>
+      <p class="page-desc">Codes, textes de lois, annales et fiches à votre disposition.</p>
+    </div>
+    <div class="doc-filters">
+      <button class="df-btn active" onclick="filterDocs('tous',this)">Tous</button>
+      <button class="df-btn" onclick="filterDocs('CCP',this)">CCP</button>
+      <button class="df-btn" onclick="filterDocs('CC',this)">Code Civil</button>
+      <button class="df-btn" onclick="filterDocs('CP',this)">Code Pénal</button>
+      <button class="df-btn" onclick="filterDocs('CT',this)">Code du Travail</button>
+      <button class="df-btn" onclick="filterDocs('CJAP',this)">CJAP</button>
+      <button class="df-btn" onclick="filterDocs('annales',this)">Annales</button>
+      <button class="df-btn" onclick="filterDocs('fiches',this)">Fiches</button>
+      <button class="df-btn" onclick="filterDocs('COM',this)">OHADA</button>
+      <button class="df-btn" onclick="filterDocs('CVDT',this)">Traités</button>
+    </div>
+    <div class="docs-grid" id="docs-grid"></div>
+  </div>
+</div>
+
+<!-- ===== PAGE METHODO ===== -->
+<div id="page-methodo" class="page">
+  <div class="page-inner">
+    <div class="page-header">
+      <span class="page-overline">Savoir-faire Juridique</span>
+      <h2 class="page-title">Méthodologie Juridique</h2>
+      <div class="ornament"><span>✒</span></div>
+      <p class="page-desc">Maîtrisez dissertation, cas pratique, commentaire d'arrêt et plus.</p>
+    </div>
+    <div class="mt-tabs">
+      <button class="mt-tab active" onclick="switchMt('dissertation',this)">Dissertation</button>
+      <button class="mt-tab" onclick="switchMt('cas',this)">Cas Pratique</button>
+      <button class="mt-tab" onclick="switchMt('commentaire',this)">Commentaire d'Arrêt</button>
+      <button class="mt-tab" onclick="switchMt('fiche',this)">Fiche d'Arrêt</button>
+      <button class="mt-tab" onclick="switchMt('consultation',this)">Consultation</button>
+    </div>
+    <div id="mt-dissertation" class="mt-body active">
+      <div class="mt-text">
+        <h3>La Dissertation Juridique</h3>
+        <p>Exercice de réflexion structurée sur un sujet de droit. Elle exige rigueur intellectuelle, maîtrise des sources et esprit de synthèse.</p>
+        <ul class="mt-steps">
+          <li><div><strong>Analyse du sujet</strong><span>Identifier les mots-clés, délimiter le sujet, dégager la problématique juridique.</span></div></li>
+          <li><div><strong>Documentation</strong><span>Rechercher législation, jurisprudence et doctrine pertinentes.</span></div></li>
+          <li><div><strong>Construction du plan</strong><span>Plan 2 parties / 2 sous-parties : équilibré, apparent, révélateur.</span></div></li>
+          <li><div><strong>Introduction</strong><span>Accroche → Définition → Intérêt → Délimitation → Problématique → Annonce.</span></div></li>
+          <li><div><strong>Développement</strong><span>Transitions logiques, sous-parties articulées, références aux textes.</span></div></li>
+          <li><div><strong>Conclusion</strong><span>Synthèse et ouverture vers des perspectives ou réformes.</span></div></li>
+        </ul>
+      </div>
+      <div>
+        <div class="mt-card"><div class="mt-quote">"</div><p>Le plan doit être apparent, équilibré et révélateur. Chaque titre doit annoncer clairement le contenu sans employer les mots du sujet. Évitez les plans chronologiques ou purement descriptifs.</p></div>
+        <div style="margin-top:16px;padding:18px;border:1px solid var(--border);background:var(--white);">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Erreurs à éviter</div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:2;">
+            <span style="color:var(--crimson);">✕</span> Paraphrase du sujet<br>
+            <span style="color:var(--crimson);">✕</span> Plan en 3 parties<br>
+            <span style="color:var(--crimson);">✕</span> Introduction sans problématique<br>
+            <span style="color:var(--crimson);">✕</span> Absence de transitions
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="mt-cas" class="mt-body">
+      <div class="mt-text">
+        <h3>Le Cas Pratique</h3>
+        <p>Simule une situation réelle nécessitant une qualification juridique et une solution motivée. Méthode IRAC.</p>
+        <ul class="mt-steps">
+          <li><div><strong>Lecture des faits</strong><span>Identifier personnes, qualifier les faits, repérer les questions de droit.</span></div></li>
+          <li><div><strong>Problèmes de droit</strong><span>Formuler chaque question sous forme d'interrogation juridique précise.</span></div></li>
+          <li><div><strong>Règle applicable</strong><span>Énoncer la règle (texte, article) de façon abstraite et générale.</span></div></li>
+          <li><div><strong>Syllogisme IRAC</strong><span>Majeure (règle) + Mineure (faits) = Conclusion.</span></div></li>
+          <li><div><strong>Solution</strong><span>Réponse claire, motivée et pratique pour le client.</span></div></li>
+        </ul>
+      </div>
+      <div class="mt-card"><div class="mt-quote">"</div><p>IRAC : <strong style="color:var(--gold-light)">I</strong>ssue – <strong style="color:var(--gold-light)">R</strong>ule – <strong style="color:var(--gold-light)">A</strong>pplication – <strong style="color:var(--gold-light)">C</strong>onclusion. Chaque question de droit suit ce schéma de façon rigoureuse et autonome.</p></div>
+    </div>
+    <div id="mt-commentaire" class="mt-body">
+      <div class="mt-text">
+        <h3>Commentaire d'Arrêt</h3>
+        <p>Expliquer, analyser et critiquer une décision de justice. Ce n'est pas un résumé mais une véritable étude juridique.</p>
+        <ul class="mt-steps">
+          <li><div><strong>Lecture de l'arrêt</strong><span>Identifier juridiction, date, parties, faits, procédure.</span></div></li>
+          <li><div><strong>Question de droit</strong><span>Quelle règle ou principe la juridiction devait-elle trancher ?</span></div></li>
+          <li><div><strong>Solution</strong><span>Qu'a décidé la juridiction ? Sur quel fondement juridique ?</span></div></li>
+          <li><div><strong>Fiche d'arrêt préalable</strong><span>Toujours rédiger une fiche avant le commentaire.</span></div></li>
+          <li><div><strong>Plan en 2 parties</strong><span>Révèle le sens et la portée de la décision.</span></div></li>
+          <li><div><strong>Développement analytique</strong><span>Expliquer, illustrer, critiquer si besoin.</span></div></li>
+        </ul>
+      </div>
+      <div class="mt-card"><div class="mt-quote">"</div><p>Le commentaire doit révéler l'apport juridique de la décision, la situer dans l'évolution du droit positif, et en montrer les limites ou contradictions.</p></div>
+    </div>
+    <div id="mt-fiche" class="mt-body">
+      <div class="mt-text">
+        <h3>La Fiche d'Arrêt</h3>
+        <p>Résumé structuré d'une décision de justice. Elle précède tout commentaire et donne une vision synthétique fidèle.</p>
+        <ul class="mt-steps">
+          <li><div><strong>Références</strong><span>Juridiction, chambre, date, numéro de pourvoi, publication.</span></div></li>
+          <li><div><strong>Faits</strong><span>Résumé court des faits pertinents en droit, chronologique.</span></div></li>
+          <li><div><strong>Procédure</strong><span>Décisions des juridictions inférieures et motifs des recours.</span></div></li>
+          <li><div><strong>Prétentions</strong><span>Arguments avancés par chaque partie.</span></div></li>
+          <li><div><strong>Question de droit</strong><span>Problématique précise soumise au juge.</span></div></li>
+          <li><div><strong>Solution</strong><span>Décision et fondement juridique retenu.</span></div></li>
+        </ul>
+      </div>
+      <div class="mt-card"><div class="mt-quote">"</div><p>La fiche est courte, neutre et objective. Elle ne comporte aucun commentaire personnel. Son unique objectif est de donner une vision synthétique et fidèle de la décision.</p></div>
+    </div>
+    <div id="mt-consultation" class="mt-body">
+      <div class="mt-text">
+        <h3>La Consultation Juridique</h3>
+        <p>Avis juridique rendu à un client. Combine analyse du droit, application aux faits et recommandations pratiques.</p>
+        <ul class="mt-steps">
+          <li><div><strong>Identification du client</strong><span>Qui est le client ? Quel est son problème juridique concret ?</span></div></li>
+          <li><div><strong>Qualification des faits</strong><span>Rattacher les faits aux catégories juridiques pertinentes.</span></div></li>
+          <li><div><strong>Règles applicables</strong><span>Présenter clairement le droit positif (loi, jurisprudence).</span></div></li>
+          <li><div><strong>Analyse des risques</strong><span>Évaluer les risques et alternatives pour le client.</span></div></li>
+          <li><div><strong>Recommandations</strong><span>Formuler un avis clair et des conseils pratiques et actionnables.</span></div></li>
+        </ul>
+      </div>
+      <div class="mt-card"><div class="mt-quote">"</div><p>La consultation doit être rédigée dans un langage accessible au client non-juriste, tout en restant juridiquement rigoureuse. L'objectif est de donner une réponse utile et compréhensible.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE ANTERIEURS ===== -->
+<div id="page-anterieurs" class="page">
+  <div class="page-inner">
+    <div class="page-header">
+      <span class="page-overline" style="color:var(--gold);">Histoire du Bureau</span>
+      <h2 class="page-title white">Bureaux Antérieurs</h2>
+      <div class="ornament"><span>🏛</span></div>
+      <p class="page-desc" style="color:rgba(255,255,255,.45);">Sélectionnez une année pour découvrir les membres du bureau correspondant.</p>
+    </div>
+    <div style="text-align:center;">
+      <div class="yr-tabs" id="yr-tabs"></div>
+    </div>
+    <div class="members-grid" id="ant-grid"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-ov" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-x" onclick="closeModal()">✕</button>
+    <div class="modal-head">
+      <h2 id="m-name"></h2>
+      <p id="m-post"></p>
+    </div>
+    <div class="modal-bd"><p id="m-bio"></p></div>
+  </div>
+</div>
+
+<!-- FOOTER (toujours visible) -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="foot-logos">
+          <img src="logo-usta.jpeg" alt="USTA" class="foot-logo">
+          <img src="logo-bged.jpeg" alt="BGED" class="foot-logo">
+        </div>
+        <div class="foot-name">BGED – USTA <span>Bureau Général des Étudiants en Droit</span></div>
+      </div>
+      <div class="foot-links">
+        <a href="#" onclick="goPage('accueil')">Accueil</a>
+        <a href="#" onclick="goPage('bureau')">Bureau</a>
+        <a href="#" onclick="goPage('cours')">Cours</a>
+        <a href="#" onclick="goPage('documents')">Documents</a>
+        <a href="#" onclick="goPage('methodo')">Méthodologie</a>
+        <a href="#" onclick="goPage('anterieurs')">Bureaux Passés</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span class="foot-copy">© 2025–2026 Bureau Général des Étudiants en Droit – Université Saint Thomas d'Aquin, Burkina Faso</span>
+      <span class="foot-motto">Veritas · Fides · Scientia</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===== DATA =====
+const membres = [
+  {nom:"Gnambwemba Wendpouiré Ange Stéphane",poste:"Président",niveau:"M1 – Droit Public Fondamental",bio:"Président du Bureau Général des Étudiants en Droit de l'USTA. Coordonne toutes les activités et représente les étudiants auprès des instances académiques."},
+  {nom:"Kambou Winsoyele Muriel Aurélie",poste:"Vice-Présidente",niveau:"L2 – Droit Privé",bio:"Assiste le président et prend en charge les projets académiques et de formation du bureau."},
+  {nom:"Compaore Jean Marc",poste:"Secrétaire Général",niveau:"L2 – DRV",bio:"Gère la correspondance, les procès-verbaux et l'organisation administrative du bureau."},
+  {nom:"OUBDA Calliste",poste:"Secrétaire Général Adjoint",niveau:"L2 – DRP",bio:"Appuie le secrétaire général dans la gestion documentaire et organisationnelle du bureau."},
+  {nom:"Souleymane Hassane Diabri",poste:"Trésorier",niveau:"L2 – DRP",bio:"Assure la gestion financière, le suivi des cotisations et l'établissement des budgets du bureau."},
+  {nom:"NONGPANGA Alice Doriane",poste:"Trésorière Adjointe",niveau:"L3 – DRP",bio:"Assiste le trésorier et assure la comptabilité des activités du bureau."},
+  {nom:"PALE Yeri Amanda Karen",poste:"Chargée de Communication",niveau:"L1",bio:"Gère la communication interne, les réseaux sociaux et la visibilité du bureau auprès des étudiants."},
+  {nom:"OUEDRAOGO Tounsida David Darhel",poste:"Délégué Chargé à l'Organisation",niveau:"L2 – FSJP",bio:"Coordonne l'organisation des activités, événements et manifestations du bureau."},
+  {nom:"Néronel Sandra",poste:"Déléguée Chargée à l'Organisation Adjointe",niveau:"L3 – DRP",bio:"Membre du bureau — déléguée chargée à l'organisation adjointe du Bureau Général des Étudiants en Droit de l'USTA."},
+];
+
+// ===== COURS DATA (liens directs) =====
+const coursData = [
+  {
+    nom: "Grand Système du Droit Étranger",
+    niveau: "L1",
+    type: "PDF",
+    lien: "https://drive.google.com/file/d/1eBDx0wolWe0o5VMP4JwnZJvV7udbx2jl/view?usp=drivesdk"
+  },
+  {
+    nom: "Questionnaire – Grand Système du Droit Étranger",
+    niveau: "L1",
+    type: "DOC",
+    lien: "https://docs.google.com/document/d/15UbcJuc-lNh9tBFtWcalz9e41qWjdPzTCwDLF8UdSA0/edit?usp=drivesdk"
+  },
+  {
+    nom: "Théorie Générale des Obligations (TGO)",
+    niveau: "L1",
+    type: "PDF",
+    lien: "https://drive.google.com/file/d/10zVJdImTzPg_dflbzatvIr7wjw2Lvl4j/view?usp=drivesdk"
+  },
+  {
+    nom: "Contrats Spéciaux",
+    niveau: "L2",
+    type: "PDF",
+    lien: "https://drive.google.com/file/d/19Uj30POlRmx9ANq1_w3bgA7vR5GmOxkl/view?usp=drivesdk"
+  },
+  {
+    nom: "Droit Judiciaire Privé (DJP)",
+    niveau: "L2",
+    type: "DOC",
+    lien: "https://docs.google.com/document/d/1nhcFRJVzO_p3b4Z0E2mvakcEvhiM80yC-kUA2Xz-FSA/edit?usp=drivesdk"
+  },
+  {
+    nom: "Théorie Générale des Obligations (TGO)",
+    niveau: "L2",
+    type: "PDF",
+    lien: "https://drive.google.com/file/d/10zVJdImTzPg_dflbzatvIr7wjw2Lvl4j/view?usp=drivesdk"
+  },
+  {
+    nom: "Instance Judiciaire",
+    niveau: "L2",
+    type: "PDF",
+    lien: "https://drive.google.com/file/d/12Jo-vQWMWpfSaQrhSUK5UynwdjqORhZg/view?usp=drivesdk"
+  },
+];
+let currentNiveau = 'tous';
+
+const docsData = [
+  // Ces liens pointent vers des PDF publics - remplace par tes propres liens Drive si tu en as
+  {type:"CC",nom:"Code Civil du Burkina Faso",meta:"Droit civil · PDF",cat:"CC",
+   lien:"https://www.droit-afrique.com/uploads/Burkina-Code-civil.pdf"},
+  {type:"CP",nom:"Code Pénal du Burkina Faso",meta:"Droit pénal · PDF",cat:"CP",
+   lien:"https://www.droit-afrique.com/uploads/Burkina-Code-penal.pdf"},
+  {type:"CCP",nom:"Code de Procédure Civile du Burkina Faso",meta:"Procédure civile · PDF",cat:"CCP",
+   lien:"https://www.droit-afrique.com/uploads/Burkina-Code-procedure-civile.pdf"},
+  {type:"CT",nom:"Code du Travail du Burkina Faso",meta:"Droit du travail · PDF",cat:"CT",
+   lien:"https://www.droit-afrique.com/uploads/Burkina-Code-travail.pdf"},
+  {type:"CJAP",nom:"Code de Justice Administrative",meta:"Droit administratif · PDF",cat:"CJAP",
+   lien:"https://www.droit-afrique.com/uploads/Burkina-Loi-2010-036-code-administratif.pdf"},
+  {type:"COM",nom:"Code de Commerce du Burkina Faso",meta:"Droit des affaires · PDF",cat:"COM",
+   lien:"https://www.droit-afrique.com/uploads/Burkina-Acte-uniforme-OHADA-droit-commercial.pdf"},
+  {type:"FAM",nom:"Code des Personnes et de la Famille",meta:"Droit de la famille · PDF",cat:"CC",
+   lien:"https://www.droit-afrique.com/uploads/Burkina-Code-personnes-famille.pdf"},
+  {type:"CONST",nom:"Constitution du Burkina Faso",meta:"Droit constitutionnel · PDF",cat:"CJAP",
+   lien:"https://www.constituteproject.org/constitution/Burkina_Faso_2015.pdf"},
+  {type:"OHADA",nom:"Traité OHADA",meta:"Droit des affaires africain · PDF",cat:"COM",
+   lien:"https://www.ohada.com/index.php/fr/traite-revise"},
+  {type:"CVDT",nom:"Convention de Vienne sur le Droit des Traités",meta:"Droit international · PDF",cat:"CVDT",
+   lien:"https://legal.un.org/ilc/texts/instruments/french/conventions/1_1_1969.pdf"},
+  {type:"ANN",nom:"Annales Droit Civil L1 – 2024/2025",meta:"Examen Final · PDF",cat:"annales",
+   lien:"#"},
+  {type:"ANN",nom:"Annales Droit Pénal L2 – 2024/2025",meta:"Examen Final · PDF",cat:"annales",
+   lien:"#"},
+  {type:"FICHE",nom:"Fiche – Les Sources du Droit",meta:"L1 · PDF",cat:"fiches",
+   lien:"#"},
+  {type:"FICHE",nom:"Fiche – La Responsabilité Civile",meta:"L2 · PDF",cat:"fiches",
+   lien:"#"},
+];
+
+const bureauxAnterieurs = {
+  "2024–2025":[
+    {nom:"Akandé Olawalé",poste:"Président",niveau:"M1"},
+    {nom:"Gnambwemba Wendpouiré Ange Stéphane",poste:"Vice-Président",niveau:"M1"},
+    {nom:"Ange Mylaine",poste:"Secrétaire Général(e)",niveau:"L3"},
+    {nom:"Compaore Jean Marc",poste:"Secrétaire Général(e) Adjoint(e)",niveau:"L2"},
+    {nom:"Astride Rita",poste:"Trésorière",niveau:"L3"},
+    {nom:"Kambou Aurélie Muriel",poste:"Déléguée à l'Information",niveau:"L2"},
+    {nom:"Souleymane Hassane Diabri",poste:"Commissaire aux Comptes",niveau:"L1"},
+    {nom:"Ouedraogo David Darhel",poste:"Délégué Chargé des Affaires Extérieures",niveau:"L2"},
+  ],
+  "2023–2024":[
+    {nom:"Prénom NOM",poste:"Président(e)",niveau:"M2"},
+    {nom:"Prénom NOM",poste:"Vice-Président(e)",niveau:"M1"},
+    {nom:"Prénom NOM",poste:"Secrétaire Général(e)",niveau:"L3"},
+    {nom:"Prénom NOM",poste:"Trésorier(ère)",niveau:"L3"},
+  ],
+  "2022–2023":[
+    {nom:"Prénom NOM",poste:"Président(e)",niveau:"M1"},
+    {nom:"Prénom NOM",poste:"Secrétaire Général(e)",niveau:"L3"},
+    {nom:"Prénom NOM",poste:"Trésorier(ère)",niveau:"L2"},
+  ],
+};
+
+// ===== NAVIGATION =====
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === id);
+  });
+  document.getElementById('nav-links').classList.remove('open');
+  window.scrollTo(0, 0);
+  return false;
+}
+
+function toggleMenu() {
+  document.getElementById('nav-links').classList.toggle('open');
+}
+
+// ===== RENDER HELPERS =====
+function avatarHTML() {
+  return `<div class="mc-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>`;
+}
+
+function memberCard(m, dark) {
+  const bg = dark ? 'mc-dark' : '';
+  const nc = dark ? 'color:#fff;' : '';
+  return `<div class="mc ${bg}" onclick="openModal('${m.nom}','${m.poste}','${m.bio||''}')">
+    <div class="mc-photo">${avatarHTML()}</div>
+    <div class="mc-info">
+      <div class="mc-name" style="${nc}">${m.nom}</div>
+      <div class="mc-post">${m.poste}</div>
+      <span class="mc-badge">${m.niveau||''}</span>
+    </div>
+  </div>`;
+}
+
+// ===== INIT =====
+document.getElementById('members-grid').innerHTML = membres.map(m => memberCard(m, false)).join('');
+
+// Gallery
+const galItems = ["Journée d'intégration 2025","Conférence Droit & Société","Compétition de plaidoirie","Remise des diplômes","Atelier méthodologie","Visite de terrain"];
+document.getElementById('gallery-grid').innerHTML = galItems.map(l => `
+  <div class="gi">
+    <div class="gi-ph">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+      <span>Photo à ajouter</span>
+      <span style="color:rgba(201,162,39,.5);font-size:9px;">${l}</span>
+    </div>
+    <div class="gi-overlay"><div class="gi-label">${l}</div></div>
+  </div>`).join('');
+
+// ===== COURS RENDER =====
+function selectNiveau(niv, btn) {
+  document.querySelectorAll('.lvl-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentNiveau = niv;
+  const grid = document.getElementById('courses-grid');
+  const status = document.getElementById('cours-status');
+  const filtered = niv === 'tous' ? coursData : coursData.filter(c => c.niveau === niv);
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;">
+      <div style="font-size:32px;margin-bottom:12px;opacity:.3;">📁</div>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text-light);font-style:italic;">Ce niveau sera disponible prochainement.</p>
+    </div>`;
+    status.style.display = 'none';
+    return;
+  }
+  grid.innerHTML = filtered.map(c => `
+    <div class="cc" data-niveau="${c.niveau}">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:36px;height:44px;background:linear-gradient(135deg,var(--crimson),#5a1020);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;clip-path:polygon(0 0,80% 0,100% 14%,100% 100%,0 100%);flex-shrink:0;">${c.type}</div>
+        <span class="cc-lvl">${c.niveau}</span>
+      </div>
+      <div class="cc-name">${c.nom}</div>
+      <a href="${c.lien}" target="_blank" class="cc-dl">Ouvrir le fichier →</a>
+    </div>`).join('');
+  status.textContent = `${filtered.length} fichier${filtered.length > 1 ? 's' : ''} disponible${filtered.length > 1 ? 's' : ''}`;
+  status.style.display = 'block';
+}
+
+// Init cours
+(function initCours() {
+  const grid = document.getElementById('courses-grid');
+  grid.innerHTML = coursData.map(c => `
+    <div class="cc" data-niveau="${c.niveau}">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:36px;height:44px;background:linear-gradient(135deg,var(--crimson),#5a1020);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;clip-path:polygon(0 0,80% 0,100% 14%,100% 100%,0 100%);flex-shrink:0;">${c.type}</div>
+        <span class="cc-lvl">${c.niveau}</span>
+      </div>
+      <div class="cc-name">${c.nom}</div>
+      <a href="${c.lien}" target="_blank" class="cc-dl">Ouvrir le fichier →</a>
+    </div>`).join('');
+  const status = document.getElementById('cours-status');
+  status.textContent = `${coursData.length} fichiers disponibles`;
+  status.style.display = 'block';
+})();
+
+// Docs
+document.getElementById('docs-grid').innerHTML = docsData.map(d => `
+  <a class="dc" data-cat="${d.cat}" href="${d.lien}" target="_blank" style="text-decoration:none;">
+    <div class="dc-icon">${d.type}</div>
+    <div><div class="dc-type">${d.cat}</div><div class="dc-name">${d.nom}</div><div class="dc-meta">${d.meta}</div></div>
+  </a>`).join('');
+
+// Bureaux anterieurs
+const years = Object.keys(bureauxAnterieurs);
+document.getElementById('yr-tabs').innerHTML = years.map((y,i) => `<button class="yr-tab${i===0?' active':''}" onclick="switchYear('${y}',this)">${y}</button>`).join('');
+renderAnt(years[0]);
+
+function renderAnt(yr) {
+  document.getElementById('ant-grid').innerHTML = bureauxAnterieurs[yr].map(m => memberCard(m, true)).join('');
+}
+
+// ===== ACTIONS =====
+function filterDocs(cat, btn) {
+  document.querySelectorAll('.df-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.dc').forEach(d => {
+    d.style.display = (cat === 'tous' || d.dataset.cat === cat) ? '' : 'none';
+  });
+}
+
+function switchYear(yr, btn) {
+  document.querySelectorAll('.yr-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAnt(yr);
+}
+
+function switchMt(id, btn) {
+  document.querySelectorAll('.mt-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.mt-body').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('mt-' + id).classList.add('active');
+}
+
+function openModal(nom, poste, bio) {
+  document.getElementById('m-name').textContent = nom;
+  document.getElementById('m-post').textContent = poste;
+  document.getElementById('m-bio').textContent = bio || 'Membre actif du bureau des étudiants en droit de l\'USTA.';
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target.id === 'modal' || e.target.classList.contains('modal-x')) {
+    document.getElementById('modal').classList.remove('open');
+  }
+}
+</script>
+</body>
+</html>
