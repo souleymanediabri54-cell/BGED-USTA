@@ -556,13 +556,51 @@ const membres = [
   {nom:"Prénom NOM",poste:"Chargé(e) des Affaires Académiques",niveau:"M1",bio:"Coordonne les activités pédagogiques, les formations et les ressources académiques."},
 ];
 
-// ===== DRIVE COURS CONFIG =====
-const DRIVE_FOLDERS = {
-  L1: "1GZr6O_GgGp6r24nuptviOaVOMlN-E6_2",
-  L2: "1lM9SNNAPp-d6InGqBWk4lcffD1zn381d",
-};
-const DRIVE_AVAILABLE = Object.keys(DRIVE_FOLDERS);
-let driveCache = {};
+// ===== COURS DATA (liens directs) =====
+const coursData = [
+  {
+    nom: "Grand Système du Droit Étranger",
+    niveau: "L1",
+    type: "PDF",
+    lien: "https://drive.google.com/file/d/1eBDx0wolWe0o5VMP4JwnZJvV7udbx2jl/view?usp=drivesdk"
+  },
+  {
+    nom: "Questionnaire – Grand Système du Droit Étranger",
+    niveau: "L1",
+    type: "DOC",
+    lien: "https://docs.google.com/document/d/15UbcJuc-lNh9tBFtWcalz9e41qWjdPzTCwDLF8UdSA0/edit?usp=drivesdk"
+  },
+  {
+    nom: "Théorie Générale des Obligations (TGO)",
+    niveau: "L1",
+    type: "PDF",
+    lien: "https://drive.google.com/file/d/10zVJdImTzPg_dflbzatvIr7wjw2Lvl4j/view?usp=drivesdk"
+  },
+  {
+    nom: "Contrats Spéciaux",
+    niveau: "L2",
+    type: "PDF",
+    lien: "https://drive.google.com/file/d/19Uj30POlRmx9ANq1_w3bgA7vR5GmOxkl/view?usp=drivesdk"
+  },
+  {
+    nom: "Droit Judiciaire Privé (DJP)",
+    niveau: "L2",
+    type: "DOC",
+    lien: "https://docs.google.com/document/d/1nhcFRJVzO_p3b4Z0E2mvakcEvhiM80yC-kUA2Xz-FSA/edit?usp=drivesdk"
+  },
+  {
+    nom: "Théorie Générale des Obligations (TGO)",
+    niveau: "L2",
+    type: "PDF",
+    lien: "https://drive.google.com/file/d/10zVJdImTzPg_dflbzatvIr7wjw2Lvl4j/view?usp=drivesdk"
+  },
+  {
+    nom: "Instance Judiciaire",
+    niveau: "L2",
+    type: "PDF",
+    lien: "https://drive.google.com/file/d/12Jo-vQWMWpfSaQrhSUK5UynwdjqORhZg/view?usp=drivesdk"
+  },
+];
 let currentNiveau = 'tous';
 
 const docsData = [
@@ -646,106 +684,50 @@ document.getElementById('gallery-grid').innerHTML = galItems.map(l => `
     <div class="gi-overlay"><div class="gi-label">${l}</div></div>
   </div>`).join('');
 
-// ===== DRIVE FETCH LOGIC =====
-async function fetchDriveFolder(niveau) {
-  if (driveCache[niveau]) return driveCache[niveau];
-  const folderId = DRIVE_FOLDERS[niveau];
-  if (!folderId) return [];
-  const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType,size,modifiedTime)&orderBy=name&key=AIzaSyC5T1KKRf-ixptew5w5qwcGOOft0ZuZ0gY&pageSize=200`;
-  try {
-    const r = await fetch(url);
-    const data = await r.json();
-    const files = (data.files || []).filter(f => f.mimeType !== 'application/vnd.google-apps.folder');
-    driveCache[niveau] = files;
-    return files;
-  } catch(e) {
-    return null; // erreur réseau ou clé invalide
-  }
-}
-
-function fileIcon(mime) {
-  if (mime === 'application/pdf') return 'PDF';
-  if (mime.includes('word') || mime.includes('document')) return 'DOC';
-  if (mime.includes('presentation') || mime.includes('powerpoint')) return 'PPT';
-  if (mime.includes('spreadsheet') || mime.includes('excel')) return 'XLS';
-  if (mime === 'application/vnd.google-apps.document') return 'DOC';
-  return 'FIC';
-}
-
-function driveLink(fileId) {
-  return `https://drive.google.com/file/d/${fileId}/view`;
-}
-
-function renderDriveFiles(niveauFiles) {
-  // niveauFiles = [{niveau, files}]
-  const grid = document.getElementById('courses-grid');
-  let html = '';
-  let total = 0;
-  for (const {niveau, files} of niveauFiles) {
-    if (!files || files.length === 0) continue;
-    for (const f of files) {
-      total++;
-      const icon = fileIcon(f.mimeType);
-      const date = f.modifiedTime ? new Date(f.modifiedTime).toLocaleDateString('fr-FR') : '';
-      html += `<div class="cc" data-niveau="${niveau}">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-          <div style="width:36px;height:44px;background:linear-gradient(135deg,var(--crimson),#5a1020);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;clip-path:polygon(0 0,80% 0,100% 14%,100% 100%,0 100%);flex-shrink:0;">${icon}</div>
-          <span class="cc-lvl">${niveau}</span>
-        </div>
-        <div class="cc-name">${f.name}</div>
-        <div class="cc-info" style="margin-top:4px;">📅 ${date}</div>
-        <a href="${driveLink(f.id)}" target="_blank" class="cc-dl">Ouvrir le fichier →</a>
-      </div>`;
-    }
-  }
-  grid.innerHTML = total > 0 ? html : `<div style="grid-column:1/-1;text-align:center;padding:48px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text-light);font-style:italic;">Aucun fichier disponible pour ce niveau.</div>`;
-  document.getElementById('cours-status').textContent = `${total} fichier${total>1?'s':''} disponible${total>1?'s':''}`;
-  document.getElementById('cours-status').style.display = 'block';
-}
-
-async function selectNiveau(niv, btn) {
+// ===== COURS RENDER =====
+function selectNiveau(niv, btn) {
   document.querySelectorAll('.lvl-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   currentNiveau = niv;
   const grid = document.getElementById('courses-grid');
-  const loading = document.getElementById('cours-loading');
   const status = document.getElementById('cours-status');
-  grid.innerHTML = '';
-  status.style.display = 'none';
-
-  const niveauxToLoad = niv === 'tous' ? DRIVE_AVAILABLE : (DRIVE_FOLDERS[niv] ? [niv] : []);
-
-  if (niveauxToLoad.length === 0) {
-    loading.style.display = 'none';
+  const filtered = niv === 'tous' ? coursData : coursData.filter(c => c.niveau === niv);
+  if (filtered.length === 0) {
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;">
       <div style="font-size:32px;margin-bottom:12px;opacity:.3;">📁</div>
       <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text-light);font-style:italic;">Ce niveau sera disponible prochainement.</p>
     </div>`;
+    status.style.display = 'none';
     return;
   }
-
-  loading.style.display = 'block';
-  const results = await Promise.all(niveauxToLoad.map(async n => ({niveau: n, files: await fetchDriveFolder(n)})));
-  loading.style.display = 'none';
-
-  // Check if all returned null (API key issue)
-  const allNull = results.every(r => r.files === null);
-  if (allNull) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;">
-      <div style="font-size:32px;margin-bottom:12px;opacity:.3;">⚠️</div>
-      <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text-light);font-style:italic;">Impossible de charger les fichiers. Vérifiez que les dossiers Drive sont bien partagés en public.</p>
-      <a href="https://drive.google.com/drive/folders/1GZr6O_GgGp6r24nuptviOaVOMlN-E6_2" target="_blank" style="display:inline-block;margin-top:16px;font-size:11px;color:var(--gold);text-decoration:none;border:1px solid var(--gold);padding:8px 20px;font-family:'Cinzel',serif;letter-spacing:.1em;">Ouvrir Drive L1 →</a>
-    </div>`;
-    return;
-  }
-
-  renderDriveFiles(results);
+  grid.innerHTML = filtered.map(c => `
+    <div class="cc" data-niveau="${c.niveau}">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:36px;height:44px;background:linear-gradient(135deg,var(--crimson),#5a1020);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;clip-path:polygon(0 0,80% 0,100% 14%,100% 100%,0 100%);flex-shrink:0;">${c.type}</div>
+        <span class="cc-lvl">${c.niveau}</span>
+      </div>
+      <div class="cc-name">${c.nom}</div>
+      <a href="${c.lien}" target="_blank" class="cc-dl">Ouvrir le fichier →</a>
+    </div>`).join('');
+  status.textContent = `${filtered.length} fichier${filtered.length > 1 ? 's' : ''} disponible${filtered.length > 1 ? 's' : ''}`;
+  status.style.display = 'block';
 }
 
-// Init cours : charge tous les niveaux disponibles au démarrage
+// Init cours
 (function initCours() {
-  // pré-remplir avec message d'accueil
-  document.getElementById('courses-grid').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text-light);font-style:italic;">Cliquez sur un niveau pour charger les cours.</div>`;
+  const grid = document.getElementById('courses-grid');
+  grid.innerHTML = coursData.map(c => `
+    <div class="cc" data-niveau="${c.niveau}">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:36px;height:44px;background:linear-gradient(135deg,var(--crimson),#5a1020);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;clip-path:polygon(0 0,80% 0,100% 14%,100% 100%,0 100%);flex-shrink:0;">${c.type}</div>
+        <span class="cc-lvl">${c.niveau}</span>
+      </div>
+      <div class="cc-name">${c.nom}</div>
+      <a href="${c.lien}" target="_blank" class="cc-dl">Ouvrir le fichier →</a>
+    </div>`).join('');
+  const status = document.getElementById('cours-status');
+  status.textContent = `${coursData.length} fichiers disponibles`;
+  status.style.display = 'block';
 })();
 
 // Docs
